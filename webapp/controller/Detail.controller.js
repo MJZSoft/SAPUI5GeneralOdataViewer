@@ -158,22 +158,28 @@ sap.ui.define([
 				}
 			}
 			if (oEntity) {
-				oTable.removeColumn();
+				oTable.removeAllColumns();
 				oTable.unbindItems();
 				var aCells = [];
 				for (i = 0; i < oEntity.property.length; i++) {
 					var oCol = oEntity.property[i];
 					var oColumn = new sap.m.Column({
-							header: new sap.m.Label({
-								text: oCol.name
-							})
-						});
+						header: new sap.m.Label({
+							text: oCol.name
+						})
+					});
+					oColumn.addCustomData(
+						new sap.ui.core.CustomData({
+							key: "p13nData",
+							value: "{'sortProperty': '" + oCol.name + "', 'filterProperty': '" + oCol.name + "', 'columnKey': '" + oCol.name +
+								"', 'leadingProperty': '" + oCol.name + "', 'columnIndex':'" + i + "'}"
+						}));
 					aCells.push(new sap.m.Text({
-						text: "{DataModel>"+oCol.name+"}"
+						text: "{DataModel>" + oCol.name + "}"
 					}));
 					oTable.addColumn(oColumn);
 				}
-				
+
 				oTable.bindItems({
 					path: "DataModel>/DataSet",
 					template: new sap.m.ColumnListItem({
