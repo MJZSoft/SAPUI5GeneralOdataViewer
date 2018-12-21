@@ -1,0 +1,79 @@
+<mvc:View controllerName="com.mjzsoft.sapui5.demo.GeneralODataViewer.controller.Detail" xmlns:m="sap.m" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.f.semantic" xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartTable="sap.ui.comp.smarttable" xmlns:core="sap.ui.core">
+	<semantic:SemanticPage id="detailPage" busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
+		<semantic:titleHeading>
+			<m:Title text="{detailView>/SetName}"/>
+		</semantic:titleHeading>
+		<semantic:headerContent>
+			<!--<m:ObjectAttribute title="{i18n>priceTitle}"/>
+			<m:ObjectNumber id="objectHeaderNumber" number="{ path: 'CategoryID', formatter: '.formatter.currencyValue' }"/>-->
+		</semantic:headerContent>
+		<semantic:content>
+			<smartTable:SmartTable id="__smartTable" entitySet="DataSet"
+				tableBindingPath="DataModel&gt;/DataSet" header="{i18n>setItems}" showRowCount="true"
+				tableType="ResponsiveTable" showFullScreenButton="false" useVariantManagement="false" enableAutoBinding="true" useExportToExcel="false"
+				ignoredFields="" beforeRebindTable="handleBeforeRebindTable">
+				<!--<smartTable:customToolbar>
+					<m:OverflowToolbar id="stickyToolbar" design="Solid" class="cimtStickyToolbar">
+						<m:ToolbarSpacer/>
+						<m:SearchField id="searchField" app:myTarget="tableSectionType" app:myType="_PTWS" tooltip="{i18n>/X000559}" width="auto" search="onSearch"
+							liveChange="onSearchLiveChange"/>
+						<m:Button app:myTarget="tableSectionType" press="onTableAddBtnPress" icon="sap-icon://add" tooltip="{i18n>/X000007}"
+							enabled="{= (${detailView>/formEnabled} &amp;&amp; ${detailView>/tableLoaded}) }"/>
+						<m:Button app:myTarget="tableSectionType" press="onTableDeleteBtnPress" icon="sap-icon://delete" tooltip="{i18n>/X000058}"
+							enabled="{= (${detailView>/formEnabled} &amp;&amp; ${detailView>/tableLoaded}) }"/>
+						<m:Button app:myTarget="tableSectionType" press="onTableRefreshBtnPress" icon="sap-icon://refresh" tooltip="{i18n>/X000193}"
+							enabled="{= (${detailView>/formEnabled} &amp;&amp; ${detailView>/tableLoaded}) }"/>
+					</m:OverflowToolbar>
+				</smartTable:customToolbar>-->
+				<m:Table id="tableDataSet" mode="MultiSelect" busy="{detailView>/tableSectionTypeBusy}">
+					<m:columns>
+						<m:Column visible="true">
+							<m:customData>
+								<core:CustomData key="p13nData"
+									value='\{"sortProperty": "__metadata/type", "filterProperty": "__metadata/type", "columnKey": "__metadata/type", "leadingProperty": "__metadata/type", "columnIndex":"0"}'/>
+							</m:customData>
+							<m:Text text="{detailView>/__metadata/type}"/>
+						</m:Column>
+						<m:Column visible="false">
+							<m:customData>
+								<core:CustomData key="p13nData"
+									value='\{"sortProperty": "__metadata/uri", "filterProperty": "__metadata/uri", "columnKey": "__metadata/uri", "leadingProperty": "__metadata/uri", "columnIndex":"1"}'/>
+							</m:customData>
+							<m:Text text="{detailView>/__metadata/uri}"/>
+						</m:Column>
+					</m:columns>
+					<m:items>
+						<m:ColumnListItem type="Inactive" press="onTableItemPress">
+							<m:cells>
+								<m:Text text="{path:'DataModel>__metadata/type'}"/>
+								<m:Text text="{path:'DataModel>__metadata/uri'}"/>
+							</m:cells>
+						</m:ColumnListItem>
+					</m:items>
+				</m:Table>
+			</smartTable:SmartTable>
+		</semantic:content>
+		<!--Semantic ShareMenu Buttons-->
+		<semantic:sendEmailAction>
+			<semantic:SendEmailAction id="shareEmail" press="onSendEmailPress"/>
+		</semantic:sendEmailAction>
+		<semantic:shareInJamAction>
+			<semantic:ShareInJamAction id="shareInJam" visible="{FLP>/isShareInJamActive}" press="onShareInJamPress"/>
+		</semantic:shareInJamAction>
+		<semantic:saveAsTileAction>
+			<footerbar:AddBookmarkButton id="shareTile" title="{detailView>/saveAsTileTitle}"/>
+		</semantic:saveAsTileAction>
+		<semantic:closeAction>
+			<semantic:CloseAction id="closeColumn" press="onCloseDetailPress"/>
+		</semantic:closeAction>
+		<semantic:fullScreenAction>
+			<semantic:FullScreenAction id="enterFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}" press="toggleFullScreen"/>
+		</semantic:fullScreenAction>
+		<semantic:exitFullScreenAction>
+			<semantic:ExitFullScreenAction id="exitFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}" press="toggleFullScreen"/>
+		</semantic:exitFullScreenAction>
+	</semantic:SemanticPage>
+</mvc:View>
