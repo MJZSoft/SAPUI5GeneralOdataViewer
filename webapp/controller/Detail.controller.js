@@ -131,37 +131,89 @@ sap.ui.define([
 							DataSet: oData.results
 						};
 						this.getModel("DataModel").setData(oItems);
-						this.createTable(sEntityName);
+						this.createSmartTable(sEntityName, sSetName);
 					}.bind(this)
 				});
 			}.bind(this));
 		},
-
-		createTable: function (sEntityName) {
-			var oTable = this.byId("tableDataSet"),
-				aRes = sEntityName.split("."),
-				sNamespace = aRes[0],
-				sEntity = aRes[1],
-				oEntity,
-				oModel = this.getModel(),
-				oMetaData = oModel.getServiceMetadata();
-			for (var j = 0; j < oMetaData.dataServices.schema.length; j++) {
-				if (oMetaData.dataServices.schema[j].namespace === sNamespace) {
-					var aEntities = oMetaData.dataServices.schema[j].entityType;
-					for (var i = 0; i < aEntities.length; i++) {
-						if (aEntities[i].name === sEntity) {
-							oEntity = aEntities[i];
-							break;
+		createSmartTable: function (sEntityName, sSetName) {
+			var oEntity = this._extractEntity(sEntityName);
+			if (oEntity) {
+				var aCells = [];
+				for (var i = 0; i < oEntity.property.length; i++) {
+					var oCol = oEntity.property[i];
+					aCells.push(oCol.name);
+				}
+				if (aCells.length > 0) {
+					var sFields = "",
+						sCols = "",
+						sCels = "";
+					for (i = 0; i < aCells.length; i++) {
+						sFields += aCells[i];
+						if (i < aCells.length - 1) {
+							sFields += ",";
+						}
+						sCols += "" +
+							"	        <m:Column visible='true'> \n" +
+							"		       <m:customData> \n" +
+							"			      <core:CustomData key='p13nData' \n" +
+							"				     value='\\{\"sortProperty\":\"" + aCells[i] + "\",\"filterProperty\":\"" + aCells[i] + "\",\"columnKey\":\"" +
+							aCells[i] + "\",\"leadingProperty\":\"" + aCells[i] + "\",\"columnIndex\":\"" + i + "\"}'/> \n" +
+							"		       </m:customData> \n" +
+							"		       <m:Text text='" + aCells[i] + "'/> \n" +
+							"	        </m:Column> \n";
+						sCels += "" +
+							"			   <m:Text text=\"{path:'DataModel>" + aCells[i] + "'}\"/> \n";
+					}
+					var oViewModel = this.getModel("detailView");
+					oViewModel.setProperty("/setItems", sSetName);
+					var xmlStr = "" +
+						"<core:FragmentDefinition xmlns:m='sap.m' xmlns:smartTable='sap.ui.comp.smarttable' xmlns:core='sap.ui.core'> \n" +
+						"    <smartTable:SmartTable id='__smartTable' entitySet='DataSet' tableBindingPath='DataModel>/DataSet' header='{detailView>/setItems}' \n" +
+						"     showRowCount='true' tableType='ResponsiveTable' showFullScreenButton='false' useVariantManagement='false' enableAutoBinding='true' \n" +
+						"     requestAtLeastFields='" + sFields + "' \n" +
+						"     useExportToExcel='false' ignoredFields='' beforeRebindTable='handleBeforeRebindTable'> \n" +
+						"     <m:Table mode='MultiSelect' busy='{detailView>/tableSectionTypeBusy}'> \n" +
+						"        <m:columns> \n" +
+						sCols +
+						"        </m:columns> \n" +
+						"      <m:items> \n" +
+						"	     <m:ColumnListItem type='Inactive' press='onTableItemPress'> \n" +
+						"		    <m:cells> \n" +
+						sCels +
+						"		    </m:cells> \n" +
+						"	     </m:ColumnListItem> \n" +
+						"      </m:items> \n" +
+						"    </m:Table> \n" +
+						"   </smartTable:SmartTable> \n" +
+						"</core:FragmentDefinition> \n";
+					var oLayout = this.getView().byId("myLayout");
+					var aControls = oLayout.removeAllContent();
+					for (var j = 0; j < aControls.length; j++) {
+						var oControl = aControls[j];
+						if (typeof oControl.destroy === "function") {
+							oControl.destroy();
 						}
 					}
-					break;
+					sap.ui.core.Fragment.load({
+						type: "XML",
+						id: sSetName,
+						definition: xmlStr,
+						controller: this
+					}).then(function (oControll) {
+						oLayout.addContent(oControll);
+					});
 				}
 			}
+		},
+		createTable: function (sEntityName) {
+			var oTable = this.byId("tableDataSet"),
+				oEntity = this._extractEntity(sEntityName);
 			if (oEntity) {
 				oTable.removeAllColumns();
 				oTable.unbindItems();
 				var aCells = [];
-				for (i = 0; i < oEntity.property.length; i++) {
+				for (var i = 0; i < oEntity.property.length; i++) {
 					var oCol = oEntity.property[i];
 					var oColumn = new sap.m.Column({
 						header: new sap.m.Label({
@@ -187,6 +239,30 @@ sap.ui.define([
 					})
 				});
 			}
+		},
+		/*
+		 * Extracts the related entity object from the metadata 
+		 */
+		_extractEntity: function (sEntityName) {
+			var aRes = sEntityName.split("."),
+				sNamespace = aRes[0],
+				sEntity = aRes[1],
+				oEntity,
+				oModel = this.getModel(),
+				oMetaData = oModel.getServiceMetadata();
+			for (var j = 0; j < oMetaData.dataServices.schema.length; j++) {
+				if (oMetaData.dataServices.schema[j].namespace === sNamespace) {
+					var aEntities = oMetaData.dataServices.schema[j].entityType;
+					for (var i = 0; i < aEntities.length; i++) {
+						if (aEntities[i].name === sEntity) {
+							oEntity = aEntities[i];
+							break;
+						}
+					}
+					break;
+				}
+			}
+			return oEntity;
 		},
 		/**
 		 * Binds the view to the object path. Makes sure that detail view displays

@@ -1,5 +1,6 @@
 <mvc:View controllerName="com.mjzsoft.sapui5.demo.GeneralODataViewer.controller.Detail" xmlns:m="sap.m" xmlns:mvc="sap.ui.core.mvc"
-	xmlns:semantic="sap.f.semantic" xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartTable="sap.ui.comp.smarttable" xmlns:core="sap.ui.core">
+	xmlns:semantic="sap.f.semantic" xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartTable="sap.ui.comp.smarttable" xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout">
 	<semantic:SemanticPage id="detailPage" busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
 		<semantic:titleHeading>
 			<m:Title text="{detailView>/SetName}"/>
@@ -9,7 +10,8 @@
 			<m:ObjectNumber id="objectHeaderNumber" number="{ path: 'CategoryID', formatter: '.formatter.currencyValue' }"/>-->
 		</semantic:headerContent>
 		<semantic:content>
-			<!--<smartTable:SmartTable id="__smartTable" entitySet="DataSet"
+			<l:VerticalLayout id="myLayout">
+				<!--<smartTable:SmartTable id="__smartTable" entitySet="DataSet"
 				tableBindingPath="DataModel&gt;/DataSet" header="{i18n>setItems}" showRowCount="true"
 				tableType="ResponsiveTable" showFullScreenButton="false" useVariantManagement="false" enableAutoBinding="true" useExportToExcel="false"
 				ignoredFields="" beforeRebindTable="handleBeforeRebindTable">-->
@@ -26,7 +28,7 @@
 							enabled="{= (${detailView>/formEnabled} &amp;&amp; ${detailView>/tableLoaded}) }"/>
 					</m:OverflowToolbar>
 				</smartTable:customToolbar>-->
-				<m:Table id="tableDataSet" mode="MultiSelect" busy="{detailView>/tableSectionTypeBusy}">
+				<!--<m:Table id="tableDataSet" mode="MultiSelect" busy="{detailView>/tableSectionTypeBusy}">
 					<m:columns>
 						<m:Column visible="true">
 							<m:customData>
@@ -51,8 +53,9 @@
 							</m:cells>
 						</m:ColumnListItem>
 					</m:items>
-				</m:Table>
+				</m:Table>-->
 			<!--</smartTable:SmartTable>-->
+			</l:VerticalLayout>
 		</semantic:content>
 		<!--Semantic ShareMenu Buttons-->
 		<semantic:sendEmailAction>
