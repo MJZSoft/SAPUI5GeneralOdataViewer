@@ -142,7 +142,7 @@ sap.ui.define([
 				aRes = sEntityName.split("."),
 				sNamespace = aRes[0],
 				sEntity = aRes[1],
-				oEntity = undefined,
+				oEntity,
 				oModel = this.getModel(),
 				oMetaData = oModel.getServiceMetadata();
 			for (var j = 0; j < oMetaData.dataServices.schema.length; j++) {
