@@ -115,12 +115,6 @@ sap.ui.define([
 			var sSetName = oEvent.getParameter("arguments").SetName,
 				sEntityName = oEvent.getParameter("arguments").EntityName;
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
-			/*this.getModel().metadataLoaded().then( function() {
-				var sObjectPath = this.getModel().createKey("Categories", {
-					CategoryID :  sObjectId
-				});
-				this._bindView("/" + sObjectPath);
-			}.bind(this));*/
 			var oModel = this.getModel();
 			oModel.metadataLoaded().then(function () {
 				oModel = this.getModel();
@@ -145,14 +139,9 @@ sap.ui.define([
 					aCells.push(oCol.name);
 				}
 				if (aCells.length > 0) {
-					var sFields = "",
-						sCols = "",
+					var sCols = "",
 						sCels = "";
 					for (i = 0; i < aCells.length; i++) {
-						sFields += aCells[i];
-						if (i < aCells.length - 1) {
-							sFields += ",";
-						}
 						sCols += "" +
 							"	        <m:Column visible='true'> \n" +
 							"		       <m:customData> \n" +
@@ -167,42 +156,30 @@ sap.ui.define([
 					}
 					var oViewModel = this.getModel("detailView");
 					oViewModel.setProperty("/setItems", sSetName);
-					var xmlStr = "" +
-						"<core:FragmentDefinition xmlns:m='sap.m' xmlns:smartTable='sap.ui.comp.smarttable' xmlns:core='sap.ui.core'> \n" +
-						"    <smartTable:SmartTable id='__smartTable' entitySet='DataSet' tableBindingPath='DataModel>/DataSet' header='{detailView>/setItems}' \n" +
-						"     showRowCount='true' tableType='ResponsiveTable' showFullScreenButton='false' useVariantManagement='false' enableAutoBinding='true' \n" +
-						"     requestAtLeastFields='" + sFields + "' \n" +
-						"     useExportToExcel='false' ignoredFields='' beforeRebindTable='handleBeforeRebindTable'> \n" +
-						"     <m:Table mode='MultiSelect' busy='{detailView>/tableSectionTypeBusy}'> \n" +
-						"        <m:columns> \n" +
-						sCols +
-						"        </m:columns> \n" +
-						"      <m:items> \n" +
-						"	     <m:ColumnListItem type='Inactive' press='onTableItemPress'> \n" +
-						"		    <m:cells> \n" +
-						sCels +
-						"		    </m:cells> \n" +
-						"	     </m:ColumnListItem> \n" +
-						"      </m:items> \n" +
-						"    </m:Table> \n" +
-						"   </smartTable:SmartTable> \n" +
-						"</core:FragmentDefinition> \n";
-					var oLayout = this.getView().byId("myLayout");
-					var aControls = oLayout.removeAllContent();
-					for (var j = 0; j < aControls.length; j++) {
-						var oControl = aControls[j];
-						if (typeof oControl.destroy === "function") {
-							oControl.destroy();
+					
+					var oModelX = new sap.ui.model.xml.XMLModel();
+					oModelX.attachRequestCompleted(function () {
+						var xmlStr = oModelX.getXML();
+						xmlStr = xmlStr.replace("<!--cols-->", sCols).replace("<!--cels-->", sCels);
+						//
+						var oLayout = this.getView().byId("myLayout");
+						var aControls = oLayout.removeAllContent();
+						for (var j = 0; j < aControls.length; j++) {
+							var oControl = aControls[j];
+							if (typeof oControl.destroy === "function") {
+								oControl.destroy();
+							}
 						}
-					}
-					sap.ui.core.Fragment.load({
-						type: "XML",
-						id: sSetName,
-						definition: xmlStr,
-						controller: this
-					}).then(function (oControll) {
-						oLayout.addContent(oControll);
-					});
+						sap.ui.core.Fragment.load({
+							type: "XML",
+							id: sSetName,
+							definition: xmlStr,
+							controller: this
+						}).then(function (oControll) {
+							oLayout.addContent(oControll);
+						});
+					}.bind(this));
+					oModelX.loadData("../view/SmartTable.fragment.xml");
 				}
 			}
 		},

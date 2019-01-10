@@ -2,44 +2,25 @@
 	xmlns:m="sap.m"
 	xmlns:smartTable="sap.ui.comp.smarttable"
 	xmlns:core="sap.ui.core">
-	<smartTable:SmartTable id="__smartTable" entitySet="DataSet" tableBindingPath="DataModel&gt;/DataSet" header="{i18n>setItems}"
+	<smartTable:SmartTable id="__smartTable" entitySet="DataSet" tableBindingPath="DataModel&gt;/DataSet" header="{detailView>/setItems}"
 				showRowCount="true" tableType="ResponsiveTable" showFullScreenButton="false" useVariantManagement="false" enableAutoBinding="true"
 				useExportToExcel="false" ignoredFields="" beforeRebindTable="handleBeforeRebindTable">
-				<!--<smartTable:customToolbar>
-					<m:OverflowToolbar id="stickyToolbar" design="Solid" class="cimtStickyToolbar">
-						<m:ToolbarSpacer/>
-						<m:SearchField id="searchField" app:myTarget="tableSectionType" app:myType="_PTWS" tooltip="{i18n>/X000559}" width="auto" search="onSearch"
-							liveChange="onSearchLiveChange"/>
-						<m:Button app:myTarget="tableSectionType" press="onTableAddBtnPress" icon="sap-icon://add" tooltip="{i18n>/X000007}"
-							enabled="{= (${detailView>/formEnabled} &amp;&amp; ${detailView>/tableLoaded}) }"/>
-						<m:Button app:myTarget="tableSectionType" press="onTableDeleteBtnPress" icon="sap-icon://delete" tooltip="{i18n>/X000058}"
-							enabled="{= (${detailView>/formEnabled} &amp;&amp; ${detailView>/tableLoaded}) }"/>
-						<m:Button app:myTarget="tableSectionType" press="onTableRefreshBtnPress" icon="sap-icon://refresh" tooltip="{i18n>/X000193}"
-							enabled="{= (${detailView>/formEnabled} &amp;&amp; ${detailView>/tableLoaded}) }"/>
-					</m:OverflowToolbar>
-				</smartTable:customToolbar>-->
 				<m:Table id="tableDataSet" mode="MultiSelect" busy="{detailView>/tableSectionTypeBusy}">
 					<m:columns>
-						<m:Column visible="true">
+						<!--<m:Column visible="true">
 							<m:customData>
 								<core:CustomData key="p13nData"
-									value='\{"sortProperty": "__metadata/type", "filterProperty": "__metadata/type", "columnKey": "__metadata/type", "leadingProperty": "__metadata/type", "columnIndex":"0"}'/>
+									value='\{"sortProperty": "xxx", "filterProperty": "xxx", "columnKey": "xxx", "leadingProperty": "xxx", "columnIndex":"0"}'/>
 							</m:customData>
-							<m:Text text="{detailView>/__metadata/type}"/>
-						</m:Column>
-						<m:Column visible="false">
-							<m:customData>
-								<core:CustomData key="p13nData"
-									value='\{"sortProperty": "__metadata/uri", "filterProperty": "__metadata/uri", "columnKey": "__metadata/uri", "leadingProperty": "__metadata/uri", "columnIndex":"1"}'/>
-							</m:customData>
-							<m:Text text="{detailView>/__metadata/uri}"/>
-						</m:Column>
+							<m:Text text="{detailView>/xxx}"/>
+						</m:Column>-->
+						<!--cols-->
 					</m:columns>
 					<m:items>
 						<m:ColumnListItem type="Inactive" press="onTableItemPress">
 							<m:cells>
-								<m:Text text="{path:'DataModel>__metadata/type'}"/>
-								<m:Text text="{path:'DataModel>__metadata/uri'}"/>
+								<!--<m:Text text="{path:'DataModel>xxx'}"/>-->
+								<!--cels-->
 							</m:cells>
 						</m:ColumnListItem>
 					</m:items>
