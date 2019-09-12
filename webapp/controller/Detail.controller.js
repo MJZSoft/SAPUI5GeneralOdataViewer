@@ -179,7 +179,7 @@ sap.ui.define([
 							oLayout.addContent(oControll);
 						});
 					}.bind(this));
-					oModelX.loadData("../view/SmartTable.fragment.xml");
+					oModelX.loadData("/webapp/view/SmartTable.fragment.xml");
 				}
 			}
 		},
